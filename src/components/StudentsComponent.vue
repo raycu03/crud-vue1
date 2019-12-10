@@ -43,26 +43,58 @@
         <b-table :items="STUDENTS" :fields="cols">
           <template v-slot:cell(action)="row">
             <b-button
-              type="submit"
               variant="danger"
+              type="submit"
               @click="DELETE_STUDENTS(row.item.id)"
-              >Eliminar</b-button
+              >Eliminar{{ row.item.id }}</b-button
             >
-            <b-button variant="primary" style="margin-left:20px"
-              >Actualizar</b-button
+            <b-button
+              variant="warning"
+              style="margin-left:20px"
+              @click="row.toggleDetails"
+              class="mr-2"
             >
+              {{ row.detailsShowing ? "Cancelar " : "" }} Actualizar
+            </b-button>
+          </template>
+          <template v-slot:row-details="row">
+            <b-form>
+              <b-form-group
+                id="input-group-1"
+                label="Code:"
+                label-for="input-1"
+              >
+                <b-form-input
+                  id="input-1"
+                  v-model="model.code"
+                  required
+                  placeholder="code"
+                ></b-form-input>
+              </b-form-group>
+
+              <b-form-group
+                id="input-group-2"
+                label="Name:"
+                label-for="input-2"
+              >
+                <b-form-input
+                  id="input-2"
+                  v-model="model.name"
+                  required
+                  placeholder="Enter name"
+                ></b-form-input>
+              </b-form-group>
+
+              <b-button
+                type="submit"
+                @click="PUT_STUDENTS([row.item.id, model])"
+                variant="primary"
+                >Actualizar</b-button
+              >
+            </b-form>
           </template>
         </b-table>
       </b-form>
-      <div>
-        <b-button
-          variant="success"
-          style="margin:20px"
-          router-link
-          to="/newStudent"
-          >Ingresar</b-button
-        >
-      </div>
     </div>
   </div>
 </template>
@@ -77,8 +109,15 @@ export default {
     ...mapActions({
       GET_STUDENTS: TypesStore.actions.GET_STUDENTS,
       POST_STUDENTS: TypesStore.actions.POST_STUDENTS,
-      DELETE_STUDENTS: TypesStore.actions.DELETE_STUDENTS
-    })
+      DELETE_STUDENTS: TypesStore.actions.DELETE_STUDENTS,
+      PUT_STUDENTS: TypesStore.actions.PUT_STUDENTS
+    }),
+    borr: function(id, code) {
+      console.log(id);
+      console.log(code);
+
+      this.DELETE_STUDENTS(id, 1), this.STUDENTS.splice(code, 1);
+    }
   },
   computed: {
     ...mapGetters({
