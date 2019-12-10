@@ -10,13 +10,15 @@ export const store = new Vuex.Store({
   //variables
   state: {
     lenguage: "es",
-    students: []
+    students: [],
+    pstudents: [],
+    dstudents: []
   },
   //Valor de las variables
   getters: {
     [TypesStore.state.LENGUAGE]: state => state.lenguage,
     [TypesStore.state.STUDENTS]: state => state.students,
-    [TypesStore.state.PSTUDENTS]: state => state.students
+    [TypesStore.state.PSTUDENTS]: state => state.pstudents
   },
   //LLamado de API y parte operacional
   actions: {
@@ -34,6 +36,12 @@ export const store = new Vuex.Store({
         .catch(function(error) {
           commit(TypesStore.mutations.SET_PSTUDENTS, error);
         });
+    },
+    [TypesStore.actions.DELETE_STUDENTS]: ({ commit }, id) => {
+      axios.delete("students/" + id).then(response => {
+        console.log(id);
+        commit(TypesStore.mutations.SET_DSTUDENTS, response.data);
+      });
     }
   },
   //Cambio de valor de variables
@@ -43,6 +51,12 @@ export const store = new Vuex.Store({
     },
     [TypesStore.mutations.SET_STUDENTS]: (state, students) => {
       state.students = students;
+    },
+    [TypesStore.mutations.SET_PSTUDENTS]: (state, pstudents) => {
+      state.pstudents = pstudents;
+    },
+    [TypesStore.mutations.SET_DSTUDENTS]: (state, dstudents) => {
+      state.dstudents = dstudents;
     }
   },
   modules: {}
